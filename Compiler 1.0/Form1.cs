@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
-
+using Compiler_1._0;
 
 
 namespace Compiler_1._0
@@ -61,69 +61,13 @@ namespace Compiler_1._0
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             string source = richTextBox1.Text;
-            richTextBox2.Clear();
+            bool hasErrors;
+            string result = AnalyzerHelper.AnalyzeCode(source, out hasErrors);
 
-            // Списки ошибок и токенов
-            var lexErrors = new List<LexicalException>();
-            var tokens = new List<Token>();
-            var lexer = new Lexer(source);
-            Token tok = null;
-
-            // Лексический анализ (накопление всех лексических ошибок)
-            do
-            {
-                try
-                {
-                    tok = lexer.NextToken();
-                    tokens.Add(tok);
-                }
-                catch (LexicalException ex)
-                {
-                    // Накопить каждую лексическую ошибку и продолжить
-                    lexErrors.Add(ex);
-                    tok = null; // не завершаем на первой ошибке
-                }
-            }
-            while (tok == null || tok.Type != TokenType.EndOfFile);
-
-            var outLog = new StringBuilder();
-
-            // Если есть лексические ошибки — выводим их
-            if (lexErrors.Count > 0)
-            {
-                richTextBox2.ForeColor = Color.Red;
-                foreach (var ex in lexErrors)
-                {
-                    outLog.AppendLine($"Лексическая ошибка: строка {ex.Line}, столбец {ex.Column}: {ex.Message}");
-                }
-                outLog.AppendLine($"Всего ошибок: {lexErrors.Count}");
-                richTextBox2.Text = outLog.ToString();
-                return;
-            }
-
-            // Синтаксический анализ
-            var parser = new Parser(tokens);
-            parser.ParseFunction();
-
-            // Если синтаксические ошибки есть — выводим их
-            if (parser.Errors.Count > 0)
-            {
-                richTextBox2.ForeColor = Color.Red;
-                foreach (var err in parser.Errors)
-                {
-                    outLog.AppendLine($"Синтаксическая ошибка: строка {err.Line}, столбец {err.Column}: ожидалась '{err.Expected}', но найдено '{err.Found}'");
-                }
-                outLog.AppendLine($"Всего ошибок: {parser.Errors.Count}");
-            }
-            else
-            {
-                richTextBox2.ForeColor = Color.Green;
-                outLog.AppendLine("Функция корректна.");
-                outLog.AppendLine("Всего ошибок: 0");
-            }
-
-            richTextBox2.Text = outLog.ToString();
+            richTextBox2.ForeColor = hasErrors ? Color.Red : Color.Green;
+            richTextBox2.Text = result;
         }
+
 
 
         private void Созранить_Click(object sender, EventArgs e)
@@ -479,5 +423,20 @@ namespace Compiler_1._0
             else
                 MessageBox.Show("Файл code.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            string source = richTextBox1.Text;
+            string fixedCode = AnalyzerHelper.FixCode(source);
+
+            richTextBox1.Text = fixedCode;
+            MessageBox.Show("Ошибки устранены. Выполнен повторный анализ.", "Исправление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+            // Повторный запуск анализа
+            toolStripButton2_Click(sender, e);
+        }
+
+
+            
     }
 }

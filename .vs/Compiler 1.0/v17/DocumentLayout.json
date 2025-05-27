@@ -1,22 +1,26 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\",
+  "WorkspaceRootPath": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\compiler 1.0\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\compiler 1.0\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|solutionrelative:compiler 1.0\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|c:\\users\\msi prestige\\desktop\\compiler end\\compiler-labs\\compiler 1.0\\analyzerhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|solutionrelative:compiler 1.0\\analyzerhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\compiler 1.0\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|solutionrelative:compiler 1.0\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|c:\\users\\msi prestige\\desktop\\compiler_rgz-master\\compiler 1.0\\scanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|solutionrelative:compiler 1.0\\scanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\compiler 1.0\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
+      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\compiler 1.0\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form",
       "RelativeMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|solutionrelative:compiler 1.0\\form1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}|Form"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\compiler 1.0\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|solutionrelative:compiler 1.0\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|c:\\users\\msi prestige\\desktop\\compiler end\\compiler-labs\\compiler 1.0\\scanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{252A53EF-FCEA-4F87-9C9A-855974E91364}|Compiler 1.0\\Compiler 1.0.csproj|solutionrelative:compiler 1.0\\scanner.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,17 +30,17 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "Form1.cs",
-              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Form1.cs",
+              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Form1.cs",
               "RelativeDocumentMoniker": "Compiler 1.0\\Form1.cs",
-              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Form1.cs",
+              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Form1.cs",
               "RelativeToolTip": "Compiler 1.0\\Form1.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAG4AAAAAAAAAAAAUwEgAAABAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T23:08:40.122Z",
               "IsPinned": true,
@@ -56,24 +60,37 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Program.cs",
-              "RelativeDocumentMoniker": "Compiler 1.0\\Program.cs",
-              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Program.cs",
-              "RelativeToolTip": "Compiler 1.0\\Program.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABEAAABBAAAAAAAAAA==",
+              "DocumentIndex": 1,
+              "Title": "AnalyzerHelper.cs",
+              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\AnalyzerHelper.cs",
+              "RelativeDocumentMoniker": "Compiler 1.0\\AnalyzerHelper.cs",
+              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\AnalyzerHelper.cs",
+              "RelativeToolTip": "Compiler 1.0\\AnalyzerHelper.cs",
+              "ViewState": "AgIAAIQAAAAAAAAAAAAswKQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-05T23:08:40.468Z",
+              "WhenOpened": "2025-05-27T10:37:28.088Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Program.cs",
+              "RelativeDocumentMoniker": "Compiler 1.0\\Program.cs",
+              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Program.cs",
+              "RelativeToolTip": "Compiler 1.0\\Program.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-27T10:20:54.731Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
-              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Form1.cs",
+              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Form1.cs",
               "RelativeDocumentMoniker": "Compiler 1.0\\Form1.cs",
-              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
+              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "RelativeToolTip": "Compiler 1.0\\Form1.cs [\u041A\u043E\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T23:08:40.469Z",
@@ -81,13 +98,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "Scanner.cs",
-              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Scanner.cs",
+              "DocumentMoniker": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Scanner.cs",
               "RelativeDocumentMoniker": "Compiler 1.0\\Scanner.cs",
-              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\compiler_rgz-master\\Compiler 1.0\\Scanner.cs",
+              "ToolTip": "C:\\Users\\MSI Prestige\\Desktop\\Compiler end\\Compiler-labs\\Compiler 1.0\\Scanner.cs",
               "RelativeToolTip": "Compiler 1.0\\Scanner.cs",
-              "ViewState": "AgIAAOYAAAAAAAAAAAAqwOkAAAAcAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAJMAAAARAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-05T23:08:40.47Z",
               "EditorCaption": ""

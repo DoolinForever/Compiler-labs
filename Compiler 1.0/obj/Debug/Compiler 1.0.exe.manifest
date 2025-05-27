@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Compiler 1.0.exe" size="42944">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Compiler 1.0.exe" size="2313664">
       <assemblyIdentity name="Compiler 1.0" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>thNRs2rOSAEj9Ny4UbE7Ytvaba7LacineHM+evSdc+g=</dsig:DigestValue>
+        <dsig:DigestValue>8WfYPsvjgm3duTa4YLNsjK3A8V1tgan9TAFOEQj1Nd4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
