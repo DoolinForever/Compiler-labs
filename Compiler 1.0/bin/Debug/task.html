@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Постановка задачи</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #005ca1;
+        }
+
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        ul {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Постановка задачи</h1>
+
+    <p>
+        Функции языка Rust представляют собой именованные конструкции, включающие параметры, возвращаемое значение и логическое тело.
+        Такие конструкции используются для повторного использования кода, структурирования логики и соблюдения принципов модульности.
+    </p>
+
+    <p><strong>Формат записи функции в Rust для моего задания включает:</strong></p>
+    <ul>
+        <li>Ключевое слово <code>fn</code>, обозначающее начало функции;</li>
+        <li>Имя функции (идентификатор);</li>
+        <li>Список параметров с их типами в круглых скобках;</li>
+        <li>Возвращаемый тип после стрелки <code>-></code>;</li>
+        <li>Тело функции в фигурных скобках с обязательным оператором <code>return</code>.</li>
+    </ul>
+
+    <p><strong>Примеры корректных определений функций:</strong></p>
+    <ol>
+        <li>
+            Однострочная функция без параметров:<br>
+            <pre>fn main() -> i32 { return 0; };</pre>
+        </li>
+        <li>
+            Функция с параметрами:<br>
+            <pre>fn sum(a: i32, b: i32) -> i32 { return a + b; };</pre>
+        </li>
+        <li>
+            Функция с выражением:<br>
+            <pre>fn calc(a: i32, b: i32, c: i32) -> i32 { return a + b * (c - a); };</pre>
+        </li>
+    </ol>
+
+    <p><strong>Лексический и синтаксический анализатор на языке C# обрабатывает следующие компоненты функции:</strong></p>
+    <ul>
+        <li><code>fn</code>, <code>return</code> — ключевые слова;</li>
+        <li>Идентификаторы — имена функций и переменных;</li>
+        <li>Типы переменных: <code>i8</code>, <code>i16</code>, <code>i32</code>, <code>i64</code>, <code>i128</code>, <code>f32</code>, <code>f64</code>, <code>bool</code>, <code>char</code>, <code>&amp;str</code>;</li>
+        <li>Символы: <code>(</code>, <code>)</code>, <code>{</code>, <code>}</code>, <code>,</code>, <code>:</code>, <code>;</code>, <code>-></code>;</li>
+        <li>Арифметические операторы: <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>;</li>
+        <li>Целочисленные значения.</li>
+    </ul>
+
+</body>
+</html>

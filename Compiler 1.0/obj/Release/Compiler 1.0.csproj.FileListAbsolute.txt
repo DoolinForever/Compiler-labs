@@ -1,0 +1,4 @@
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Release\Compiler 1.0.csproj.AssemblyReference.cache
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Release\Compiler 1.0.csproj.SuggestedBindingRedirects.cache
+C:\Users\MSI Prestige\Desktop\compiler\Compiler 1.0\Compiler 1.0\obj\Release\Compiler 1.0.csproj.AssemblyReference.cache
+C:\Users\MSI Prestige\Desktop\compiler\Compiler 1.0\Compiler 1.0\obj\Release\Compiler 1.0.csproj.SuggestedBindingRedirects.cache

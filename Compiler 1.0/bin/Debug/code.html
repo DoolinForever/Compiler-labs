@@ -1,0 +1,1052 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Исходный код программы</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #005ca1;
+        }
+
+        h2 {
+            margin-top: 40px;
+            color: #007acc;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            overflow-x: auto;
+            border-left: 4px solid #005ca1;
+            font-family: Consolas, monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Исходный код программы</h1>
+
+    <h2>Form1.cs</h2>
+    <pre>
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using System.Text.RegularExpressions;
+
+
+
+namespace Compiler_1._0
+{
+
+    public partial class Form1 : Form
+    {
+
+
+
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
+        {
+            UpdateLineNumbers();
+            richTextBox2.Clear();
+        }
+
+        
+        private void ShowAboutInfo()
+        {
+            string info =
+@"О ПРОГРАММЕ
+
+Название: Компилятор простых функций
+Версия: 1.0
+Автор: Присекин Сергей
+Год: 2025
+
+Описание:
+Это небольшое приложение создано для выявления ошибок написанной функции на языке RUST.";
+
+            MessageBox.Show(info, "О программе", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+
+
+        private string currentFilePath = "";
+        public Form1()
+        {
+            InitializeComponent();
+            this.Text = "Compiler";
+
+        }
+
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
+
+        private void toolStripButton2_Click(object sender, EventArgs e)
+        {
+            string source = richTextBox1.Text;
+            richTextBox2.Clear();
+
+            var lexLog = new StringBuilder();
+            var tokens = new List<Token>();
+            var lexer = new Lexer(source);
+            Token tok = null;
+
+            // Лексический анализ и лог
+            try
+            {
+                do
+                {
+                    tok = lexer.NextToken();
+                    tokens.Add(tok);
+
+                    
+                    string kind;
+                    switch (tok.Type)
+                    {
+                        case TokenType.Fn:
+                        case TokenType.Return:
+                            kind = "keyword";
+                            break;
+                        case TokenType.Identifier:
+                            kind = "identifier";
+                            break;
+                        case TokenType.TypeName:
+                            kind = "type";
+                            break;
+                        case TokenType.Number:
+                            kind = "number";
+                            break;
+                        case TokenType.LParen:
+                            kind = "left parenthesis '('";
+                            break;
+                        case TokenType.RParen:
+                            kind = "right parenthesis ')'";
+                            break;
+                        case TokenType.LBrace:
+                            kind = "left brace '{'";
+                            break;
+                        case TokenType.RBrace:
+                            kind = "right brace '}'";
+                            break;
+                        case TokenType.Comma:
+                            kind = "comma ','";
+                            break;
+                        case TokenType.Colon:
+                            kind = "colon ':'";
+                            break;
+                        case TokenType.Semicolon:
+                            kind = "semicolon ';'";
+                            break;
+                        case TokenType.Arrow:
+                            kind = "arrow '->'";
+                            break;
+                        case TokenType.Plus:
+                            kind = "plus '+'";
+                            break;
+                        case TokenType.Minus:
+                            kind = "minus '-'";
+                            break;
+                        case TokenType.Star:
+                            kind = "asterisk '*'";
+                            break;
+                        case TokenType.Slash:
+                            kind = "slash '/'";
+                            break;
+                        case TokenType.EndOfFile:
+                            kind = "end-of-file";
+                            break;
+                        default:
+                            kind = tok.Type.ToString();
+                            break;
+                    }
+
+                    lexLog.AppendLine(
+                        $"Lexeme: '{tok.Lexeme}', Type: {kind}, Location: {tok.Line} стр., {tok.Column} сим.");
+                }
+                while (tok.Type != TokenType.EndOfFile);
+            }
+            catch (LexicalException ex)
+            {
+                richTextBox2.ForeColor = Color.Red;
+                richTextBox2.Text = lexLog.ToString()
+                    + Environment.NewLine
+                    + $"Лексическая ошибка:{Environment.NewLine}" +
+                      $"  Строка {ex.Line}, столбец {ex.Column}{Environment.NewLine}" +
+                      $"  Лексема: '{ex.Lexeme}'{Environment.NewLine}" +
+                      $"  {ex.Message}";
+                return;
+            }
+
+            // Синтаксический анализ
+            var parser = new Parser(tokens);
+            try
+            {
+                parser.ParseFunction();
+                richTextBox2.ForeColor = Color.Green;
+                richTextBox2.Text = lexLog.ToString()
+                    + "Функция корректна.";
+            }
+            catch (SyntaxException ex)
+            {
+                // до первой синтаксической ошибки
+                var procLog = new StringBuilder();
+                for (int i = 0; i < parser.Position; i++)
+                {
+                    var t = tokens[i];
+                    string kind;
+                    switch (t.Type)
+                    {
+                        case TokenType.Fn:
+                        case TokenType.Return:
+                            kind = "keyword";
+                            break;
+                        case TokenType.Identifier:
+                            kind = "identifier";
+                            break;
+                        case TokenType.TypeName:
+                            kind = "type";
+                            break;
+                        case TokenType.Number:
+                            kind = "number";
+                            break;
+                        case TokenType.LParen:
+                            kind = "left parenthesis '('";
+                            break;
+                        case TokenType.RParen:
+                            kind = "right parenthesis ')'";
+                            break;
+                        case TokenType.LBrace:
+                            kind = "left brace '{'";
+                            break;
+                        case TokenType.RBrace:
+                            kind = "right brace '}'";
+                            break;
+                        case TokenType.Comma:
+                            kind = "comma ','";
+                            break;
+                        case TokenType.Colon:
+                            kind = "colon ':'";
+                            break;
+                        case TokenType.Semicolon:
+                            kind = "semicolon ';'";
+                            break;
+                        case TokenType.Arrow:
+                            kind = "arrow '->'";
+                            break;
+                        case TokenType.Plus:
+                            kind = "plus '+'";
+                            break;
+                        case TokenType.Minus:
+                            kind = "minus '-'";
+                            break;
+                        case TokenType.Star:
+                            kind = "asterisk '*'";
+                            break;
+                        case TokenType.Slash:
+                            kind = "slash '/'";
+                            break;
+                        case TokenType.EndOfFile:
+                            kind = "end-of-file";
+                            break;
+                        default:
+                            kind = t.Type.ToString();
+                            break;
+                    }
+
+                    procLog.AppendLine(
+                        $"Lexeme: '{t.Lexeme}', Type: {kind}, Location: {t.Line} стр., {t.Column} сим.");
+                }
+
+                richTextBox2.ForeColor = Color.Red;
+                richTextBox2.Text = procLog.ToString()
+                    + Environment.NewLine
+                    + $"Синтаксическая ошибка:{Environment.NewLine}" +
+                      $"  Строка {ex.Line}, столбец {ex.Column}{Environment.NewLine}" +
+                      $"  Лексема: '{ex.Lexeme}'{Environment.NewLine}" +
+                      $"  {ex.Message}";
+            }
+        }
+
+
+        private void Созранить_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(currentFilePath)) // Проверяем, есть ли уже сохранённый файл
+            {
+                try
+                {
+                    File.WriteAllText(currentFilePath, richTextBox1.Text);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка при сохранении файла: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            else
+            {
+                // Если путь пустой, вызываем "Сохранить как"
+                сохрнаитьКакToolStripMenuItem_Click(sender, e);
+            }
+        }
+
+        private void О_программе_Click(object sender, EventArgs e)
+        {
+            ShowAboutInfo();
+        }
+
+        private void richTextBox2_TextChanged(object sender, EventArgs e)
+        {
+            richTextBox2.SelectionStart = 0;
+            richTextBox2.ScrollToCaret();
+        }
+
+        private void Create_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Clear();
+        }
+
+        private void создатьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Clear();
+        }
+
+        private void открытьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            openFileDialog.Title = "Открыть файл";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Сохраняем путь к открытому файлу
+                    currentFilePath = openFileDialog.FileName;
+
+                    // Загружаем текст из файла в редактор
+                    richTextBox1.Text = File.ReadAllText(currentFilePath);
+
+                    // Обновляем заголовок окна
+                    this.Text = "Редактор - " + Path.GetFileName(currentFilePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка при открытии файла: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void Open_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            openFileDialog.Title = "Открыть файл";
+
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    // Сохраняем путь к открытому файлу
+                    currentFilePath = openFileDialog.FileName;
+
+                    // Загружаем текст из файла в редактор
+                    richTextBox1.Text = File.ReadAllText(currentFilePath);
+
+                    // Обновляем заголовок окна
+                    this.Text = "Редактор - " + Path.GetFileName(currentFilePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка при открытии файла: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            
+        }
+
+        private void сохрнаитьКакToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog saveFileDialog = new SaveFileDialog();
+            saveFileDialog.Filter = "Текстовые файлы (*.txt)|*.txt|Все файлы (*.*)|*.*";
+            saveFileDialog.Title = "Сохранить файл как";
+
+            if (saveFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    currentFilePath = saveFileDialog.FileName;
+
+                    File.WriteAllText(currentFilePath, richTextBox1.Text);
+
+                    this.Text = "Редактор - " + Path.GetFileName(currentFilePath);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Ошибка при сохранении файла: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void выходToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(richTextBox1.Text) && string.IsNullOrEmpty(currentFilePath))
+            {
+                var result = MessageBox.Show("У вас есть несохранённые изменения. Выйти без сохранения?",
+                                             "Подтверждение выхода",
+                                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.No)
+                    return;
+            }
+
+            // Закрываем приложение
+            Application.Exit();
+        }
+
+        private void отменитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.CanUndo) 
+            {
+                richTextBox1.Undo();
+            }
+        }
+
+        private void повторитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.CanRedo) 
+            {
+                richTextBox1.Redo(); 
+            }
+        }
+
+        private void вырезатьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionLength > 0)
+            {
+                richTextBox1.Cut(); 
+            }
+        }
+
+        private void копироватьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionLength > 0)
+            {
+                richTextBox1.Copy(); 
+            }
+        }
+
+        private void вставитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsText())
+            {
+                richTextBox1.Paste(); 
+            }
+        }
+
+        private void удалитьToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionLength > 0)
+            {
+                richTextBox1.SelectedText = ""; 
+            }
+        }
+
+        private void выделитьВсеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            richTextBox1.SelectAll(); 
+            richTextBox1.Focus();
+        }
+
+        private void Cancel_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.CanUndo)
+            {
+                richTextBox1.Undo();
+            }
+        }
+
+        private void Repeat_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.CanRedo)
+            {
+                richTextBox1.Redo();
+            }
+        }
+
+        private void Copy_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionLength > 0)
+            {
+                richTextBox1.Copy();
+            }
+        }
+
+        private void Cut_Click(object sender, EventArgs e)
+        {
+            if (richTextBox1.SelectionLength > 0)
+            {
+                richTextBox1.Cut();
+            }
+        }
+
+        private void Insert_Click(object sender, EventArgs e)
+        {
+            if (Clipboard.ContainsText())
+            {
+                richTextBox1.Paste();
+            }
+        }
+
+        private void вызовСправкиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string helpFile = Path.Combine(Application.StartupPath, "help.html");
+
+            if (File.Exists(helpFile))
+            {
+                System.Diagnostics.Process.Start(helpFile);
+            }
+            else
+            {
+                MessageBox.Show("Файл справки не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void Reference_Click(object sender, EventArgs e)
+        {
+            ShowHelp();
+        }
+
+        private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ShowAboutInfo();
+        }
+
+        private void пускToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            toolStripButton2_Click(sender, e);
+        }
+
+        private void richTextBox1_VScroll(object sender, EventArgs e)
+        {
+            SyncScroll();
+        }
+
+        private void UpdateLineNumbers()
+        {
+            int firstLine = richTextBox1.GetLineFromCharIndex(richTextBox1.GetCharIndexFromPosition(new Point(0, 0)));
+            int lastLine = richTextBox1.GetLineFromCharIndex(richTextBox1.GetCharIndexFromPosition(new Point(0, richTextBox1.ClientSize.Height)));
+
+            var lineNumbers = new StringBuilder();
+            for (int i = firstLine + 1; i <= lastLine + 1; i++)
+            {
+                lineNumbers.AppendLine(i.ToString());
+            }
+
+            lineNumbersBox.Text = lineNumbers.ToString();
+        }
+
+        private void SyncScroll()
+        {
+            int d = richTextBox1.GetPositionFromCharIndex(0).Y - lineNumbersBox.GetPositionFromCharIndex(0).Y;
+            lineNumbersBox.Location = new Point(lineNumbersBox.Location.X, d);
+        }
+
+        private void постановкаЗадачиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string helpFile = Path.Combine(Application.StartupPath, "task.html");
+
+            if (File.Exists(helpFile))
+            {
+                System.Diagnostics.Process.Start(helpFile);
+            }
+            else
+            {
+                MessageBox.Show("Файл task.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void грамматикаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Path.Combine(Application.StartupPath, "grammar.html");
+
+            if (File.Exists(path))
+                System.Diagnostics.Process.Start(path);
+            else
+                MessageBox.Show("Файл grammar.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void классификацияГрамматикиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Path.Combine(Application.StartupPath, "classification.html");
+
+            if (File.Exists(path))
+                System.Diagnostics.Process.Start(path);
+            else
+                MessageBox.Show("Файл classification.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void методАнализаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Path.Combine(Application.StartupPath, "analysis.html");
+
+            if (File.Exists(path))
+                System.Diagnostics.Process.Start(path);
+            else
+                MessageBox.Show("Файл analysis.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void тестовыйПримерToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Path.Combine(Application.StartupPath, "test.html");
+
+            if (File.Exists(path))
+                System.Diagnostics.Process.Start(path);
+            else
+                MessageBox.Show("Файл test.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void списокЛитературыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Path.Combine(Application.StartupPath, "literature.html");
+
+            if (File.Exists(path))
+                System.Diagnostics.Process.Start(path);
+            else
+                MessageBox.Show("Файл literature.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private void исходныйКодПрограммыToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = Path.Combine(Application.StartupPath, "code.html");
+
+            if (File.Exists(path))
+                System.Diagnostics.Process.Start(path);
+            else
+                MessageBox.Show("Файл code.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+}
+
+  </pre>
+
+    <h2>Scanner.cs</h2>
+    <pre>
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Compiler_1._0
+{
+    
+
+    enum TokenType
+    {
+        Fn, Return,
+        Identifier, TypeName, Number,
+        Comma, Colon, Semicolon,
+        Arrow, LParen, RParen, LBrace, RBrace,
+        Plus, Minus, Star, Slash,
+        EndOfFile
+    }
+
+    class Token
+    {
+        public TokenType Type { get; }
+        public string Lexeme { get; }
+        public int Line { get; }
+        public int Column { get; }
+
+        public Token(TokenType type, string lexeme, int line, int column)
+        {
+            Type = type;
+            Lexeme = lexeme;
+            Line = line;
+            Column = column;
+        }
+    }
+
+    class LexicalException : Exception
+    {
+        public int Line { get; }
+        public int Column { get; }
+        public string Lexeme { get; }
+
+        public LexicalException(string message, int line, int column, string lexeme)
+            : base(message)
+        {
+            Line = line;
+            Column = column;
+            Lexeme = lexeme;
+        }
+    }
+
+    class SyntaxException : Exception
+    {
+        public int Line { get; }
+        public int Column { get; }
+        public string Lexeme { get; }
+
+        public SyntaxException(string message, int line, int column, string lexeme)
+            : base(message)
+        {
+            Line = line;
+            Column = column;
+            Lexeme = lexeme;
+        }
+    }
+
+    class Lexer
+    {
+        private readonly string _text;
+        private int _pos = 0, _line = 1, _column = 1;
+
+        // Разрешённые типы переменных
+        private static readonly HashSet<string> ReservedTypes = new HashSet<string>
+        {
+            "i8", "i16", "i32", "i64", "i128",
+            "f32", "f64", "bool", "char"
+        };
+
+        public Lexer(string text) => _text = text;
+
+        private char Current => _pos < _text.Length ? _text[_pos] : '\0';
+
+        private void Advance()
+        {
+            if (Current == '\n') { _line++; _column = 1; }
+            else { _column++; }
+            _pos++;
+        }
+
+        public Token NextToken()
+        {
+            // Пропускаем пробелы
+            while (char.IsWhiteSpace(Current))
+                Advance();
+
+            int startLine = _line, startCol = _column;
+
+            // Конец файла
+            if (Current == '\0')
+                return new Token(TokenType.EndOfFile, string.Empty, startLine, startCol);
+
+            // Специальная обработка типа &str
+            if (Current == '&')
+            {
+                int remaining = _text.Length - _pos;
+                if (remaining >= 4 && _text.Substring(_pos, 4) == "&str")
+                {
+                    // Съедаем '&str'
+                    for (int i = 0; i < 4; i++)
+                        Advance();
+                    return new Token(TokenType.TypeName, "&str", startLine, startCol);
+                }
+                throw new LexicalException("Unexpected character '&'", startLine, startCol, "&");
+            }
+
+            // Однобуквенные символы и операторы
+            switch (Current)
+            {
+                case '(': Advance(); return new Token(TokenType.LParen, "(", startLine, startCol);
+                case ')': Advance(); return new Token(TokenType.RParen, ")", startLine, startCol);
+                case '{': Advance(); return new Token(TokenType.LBrace, "{", startLine, startCol);
+                case '}': Advance(); return new Token(TokenType.RBrace, "}", startLine, startCol);
+                case ',': Advance(); return new Token(TokenType.Comma, ",", startLine, startCol);
+                case ':': Advance(); return new Token(TokenType.Colon, ":", startLine, startCol);
+                case ';': Advance(); return new Token(TokenType.Semicolon, ";", startLine, startCol);
+                case '+': Advance(); return new Token(TokenType.Plus, "+", startLine, startCol);
+                case '-':
+                    Advance();
+                    if (Current == '>')
+                    {
+                        Advance();
+                        return new Token(TokenType.Arrow, "->", startLine, startCol);
+                    }
+                    return new Token(TokenType.Minus, "-", startLine, startCol);
+                case '*': Advance(); return new Token(TokenType.Star, "*", startLine, startCol);
+                case '/': Advance(); return new Token(TokenType.Slash, "/", startLine, startCol);
+            }
+
+            // Идентификаторы, ключевые слова и типы
+            if (char.IsLetter(Current) || Current == '_')
+            {
+                var sb = new StringBuilder();
+                while (char.IsLetterOrDigit(Current) || Current == '_')
+                {
+                    if (Current > 127)
+                        throw new LexicalException("Forbidden character (non-ASCII)", _line, _column, Current.ToString());
+                    sb.Append(Current);
+                    Advance();
+                }
+                var lex = sb.ToString();
+                // Ключевые слова
+                if (lex == "fn")
+                    return new Token(TokenType.Fn, lex, startLine, startCol);
+                if (lex == "return")
+                    return new Token(TokenType.Return, lex, startLine, startCol);
+                // Типы
+                if (ReservedTypes.Contains(lex))
+                    return new Token(TokenType.TypeName, lex, startLine, startCol);
+                // Обычные идентификаторы
+                return new Token(TokenType.Identifier, lex, startLine, startCol);
+            }
+
+            // Числа
+            if (char.IsDigit(Current))
+            {
+                var sb = new StringBuilder();
+                while (char.IsDigit(Current))
+                {
+                    sb.Append(Current);
+                    Advance();
+                }
+                return new Token(TokenType.Number, sb.ToString(), startLine, startCol);
+            }
+
+            // Нераспознанный символ
+            char bad = Current;
+            Advance();
+            throw new LexicalException($"Unexpected character '{bad}'", startLine, startCol, bad.ToString());
+        }
+    }
+
+    class Parser
+    {
+        private readonly List<Token> _tokens;
+        private int _index = 0;
+        public int Position
+        {
+            get { return _index; }
+        }
+        public Parser(List<Token> tokens)
+        {
+            _tokens = tokens;
+        }
+
+        // Корректное определение свойства Current
+        private Token Current
+        {
+            get
+            {
+                if (_index < _tokens.Count)
+                    return _tokens[_index];
+                
+                return _tokens[_tokens.Count - 1];
+            }
+        }
+
+        private void Eat(TokenType type)
+        {
+            if (Current.Type == type)
+            {
+                _index++;
+                return;
+            }
+
+            // Определяем ожидаемую лексему для читаемого типа токена
+            string expectedLex;
+            switch (type)
+            {
+                case TokenType.Fn:
+                    expectedLex = "fn";
+                    break;
+                case TokenType.Return:
+                    expectedLex = "return";
+                    break;
+                case TokenType.LParen:
+                    expectedLex = "(";
+                    break;
+                case TokenType.RParen:
+                    expectedLex = ")";
+                    break;
+                case TokenType.LBrace:
+                    expectedLex = "{";
+                    break;
+                case TokenType.RBrace:
+                    expectedLex = "}";
+                    break;
+                case TokenType.Arrow:
+                    expectedLex = "->";
+                    break;
+                case TokenType.Colon:
+                    expectedLex = ":";
+                    break;
+                case TokenType.Comma:
+                    expectedLex = ",";
+                    break;
+                case TokenType.Semicolon:
+                    expectedLex = ";";
+                    break;
+                case TokenType.Plus:
+                    expectedLex = "+";
+                    break;
+                case TokenType.Minus:
+                    expectedLex = "-";
+                    break;
+                case TokenType.Star:
+                    expectedLex = "*";
+                    break;
+                case TokenType.Slash:
+                    expectedLex = "/";
+                    break;
+                case TokenType.TypeName:
+                    expectedLex = "<type>";
+                    break;
+                case TokenType.Identifier:
+                    expectedLex = "<identifier>";
+                    break;
+                case TokenType.Number:
+                    expectedLex = "<number>";
+                    break;
+                case TokenType.EndOfFile:
+                    expectedLex = "<EOF>";
+                    break;
+                default:
+                    expectedLex = type.ToString();
+                    break;
+            }
+
+            
+            string kind;
+            if (type == TokenType.Fn || type == TokenType.Return)
+                kind = "keyword";
+            else if (type == TokenType.Identifier)
+                kind = "identifier";
+            else if (type == TokenType.TypeName)
+                kind = "type";
+            else if (type == TokenType.Number)
+                kind = "number";
+            else
+                kind = "token";
+
+            throw new SyntaxException(
+                string.Format("Expected {0} '{1}', found '{2}'", kind, expectedLex, Current.Lexeme),
+                Current.Line, Current.Column, Current.Lexeme);
+            string.Format("Expected '{0}', found '{1}'", expectedLex, Current.Lexeme,
+                Current.Line, Current.Column, Current.Lexeme);
+        }
+
+        public void ParseFunction()
+        {
+            Eat(TokenType.Fn);
+            Eat(TokenType.Identifier);
+            Eat(TokenType.LParen);
+            ParseParamList();
+            Eat(TokenType.RParen);
+            Eat(TokenType.Arrow);
+            Eat(TokenType.TypeName);
+            Eat(TokenType.LBrace);
+            Eat(TokenType.Return);
+            ParseExpression();
+            Eat(TokenType.Semicolon);
+            Eat(TokenType.RBrace);
+            
+            if (Current.Type == TokenType.Semicolon)
+                Eat(TokenType.Semicolon);
+            Eat(TokenType.EndOfFile);
+        }
+
+        private void ParseParamList()
+        {
+            if (Current.Type == TokenType.Identifier)
+            {
+                ParseParam();
+                while (Current.Type == TokenType.Comma)
+                {
+                    Eat(TokenType.Comma);
+                    ParseParam();
+                }
+            }
+        }
+
+        private void ParseParam()
+        {
+            Eat(TokenType.Identifier);
+            Eat(TokenType.Colon);
+            Eat(TokenType.TypeName);
+        }
+
+        private void ParseExpression()
+        {
+            ParseTerm();
+            while (Current.Type == TokenType.Plus || Current.Type == TokenType.Minus)
+            {
+                Eat(Current.Type);
+                ParseTerm();
+            }
+        }
+
+        private void ParseTerm()
+        {
+            ParseFactor();
+            while (Current.Type == TokenType.Star || Current.Type == TokenType.Slash)
+            {
+                Eat(Current.Type);
+                ParseFactor();
+            }
+        }
+
+        private void ParseFactor()
+        {
+            if (Current.Type == TokenType.Number || Current.Type == TokenType.Identifier)
+            {
+                Eat(Current.Type);
+            }
+            else if (Current.Type == TokenType.LParen)
+            {
+                Eat(TokenType.LParen);
+                ParseExpression();
+                Eat(TokenType.RParen);
+            }
+            else
+            {
+                throw new SyntaxException(
+                    string.Format("Unexpected token '{0}' in expression", Current.Lexeme),
+                    Current.Line, Current.Column, Current.Lexeme);
+            }
+        }
+    }
+}
+
+  </pre>
+
+    <h2>Program.cs</h2>
+    <pre>
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace Compiler_1._0
+{
+    internal static class Program
+    {
+        /// &lt;summary&gt;
+        /// Главная точка входа для приложения.
+        /// &lt;/summary&gt;
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+        }
+    }
+}
+  </pre>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Грамматика языка</title>
+    <style>
+        body {
+            font-family: Consolas, monospace;
+            padding: 20px;
+            background-color: #fdfdfd;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #005ca1;
+        }
+
+        pre {
+            background-color: #f4f4f4;
+            padding: 15px;
+            border-left: 4px solid #005ca1;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Грамматика языка Rust</h1>
+
+    <pre>
+G[Rust_Function] = (Vt, Vn, P, S)
+
+Vt = { fn, id, (, ), ,, :, ->, {, }, type, ;, return, number, +, -, *, /, ( ) }
+
+Vn = { S, Func, Params, Param, ParamList, ReturnType, Body, ReturnStmt, Expr, Term, Factor }
+
+S = Func
+
+P {
+  &lt;Func&gt;        → &lt;Fn&gt; &lt;Id&gt; &lt;LParen&gt; &lt;Params&gt; &lt;RParen&gt; &lt;ReturnType&gt; &lt;Body&gt; &lt;Semicolon&gt;
+  &lt;Params&gt;      → ε | &lt;Param&gt; &lt;ParamList&gt;
+  &lt;ParamList&gt;   → &lt;Comma&gt; &lt;Param&gt; &lt;ParamList&gt; | ε
+  &lt;Param&gt;       → &lt;Id&gt; &lt;Colon&gt; &lt;Type&gt;
+  &lt;ReturnType&gt;  → &lt;Arrow&gt; &lt;Type&gt;
+  &lt;Body&gt;        → &lt;LBrace&gt; &lt;ReturnStmt&gt; &lt;RBrace&gt;
+  &lt;ReturnStmt&gt;  → &lt;Return&gt; &lt;Expr&gt; &lt;Semicolon&gt;
+  &lt;Expr&gt;        → &lt;Term&gt; &lt;ExprPrime&gt;
+  &lt;ExprPrime&gt;   → &lt;Plus&gt; &lt;Term&gt; &lt;ExprPrime&gt; | &lt;Minus&gt; &lt;Term&gt; &lt;ExprPrime&gt; | ε
+  &lt;Term&gt;        → &lt;Factor&gt; &lt;TermPrime&gt;
+  &lt;TermPrime&gt;   → &lt;Star&gt; &lt;Factor&gt; &lt;TermPrime&gt; | &lt;Slash&gt; &lt;Factor&gt; &lt;TermPrime&gt; | ε
+  &lt;Factor&gt;      → &lt;Id&gt; | &lt;Number&gt; | &lt;LParen&gt; &lt;Expr&gt; &lt;RParen&gt;
+}
+    </pre>
+</body>
+</html>

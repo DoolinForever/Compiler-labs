@@ -1,0 +1,52 @@
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.exe.config
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.AssemblyReference.cache
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.SuggestedBindingRedirects.cache
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler_1._0.Form1.resources
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler_1._0.Properties.Resources.resources
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.GenerateResource.cache
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.CoreCompileInputs.cache
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\шарага 6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.exe.config
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.AssemblyReference.cache
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.SuggestedBindingRedirects.cache
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler_1._0.Properties.Resources.resources
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.GenerateResource.cache
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.CoreCompileInputs.cache
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\obj\Debug\Compiler_1._0.Form1.resources
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\help.html
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\task.html
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\classification.html
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\grammar.html
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\analysis.html
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\literature.html
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\test.html
+C:\Users\MSI Prestige\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\code.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\analysis.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\classification.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\code.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\grammar.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\help.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\literature.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\task.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\test.html
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\Compiler 1.0.exe.config
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.AssemblyReference.cache
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler_1._0.Form1.resources
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler_1._0.Properties.Resources.resources
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.GenerateResource.cache
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.CoreCompileInputs.cache
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\Compiler 1.0.exe.manifest
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\bin\Debug\Compiler 1.0.application
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler 1.0.exe.manifest
+C:\Users\MSI Prestige\Desktop\compiler_rgz-master\Compiler 1.0\obj\Debug\Compiler 1.0.application

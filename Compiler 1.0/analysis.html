@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Метод анализа</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 25px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #005ca1;
+        }
+
+        img {
+            display: block;
+            margin: 20px auto;
+            border: 1px solid #ccc;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .caption {
+            text-align: center;
+            font-style: italic;
+            color: #555;
+            margin-top: -10px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Метод анализа</h1>
+
+    <p>
+        Так как грамматика <code>G[Rust_Function]</code> является контекстно-свободной, реализуем ее правила на графе:
+    </p>
+
+    <img src="rules.png" alt="Граф правил грамматики">
+    <div class="caption">Рис. 1 — Граф правил грамматики</div>
+
+    <p>Диаграмма состояний сканера:</p>
+
+    <img src="scanner.png" alt="Диаграмма сканера">
+    <div class="caption">Рис. 2 — Диаграмма состояний лексического анализатора</div>
+
+</body>
+</html>
