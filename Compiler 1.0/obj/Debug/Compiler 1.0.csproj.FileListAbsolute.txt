@@ -19,3 +19,13 @@ C:\Users\MSI Prestige\Desktop\Интерфейс\Compiler-Lab2\Desktop\6 сем\
 C:\Users\MSI Prestige\Desktop\Интерфейс\Compiler-Lab2\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.exe.config
 C:\Users\MSI Prestige\Desktop\Интерфейс\Compiler-Lab2\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.exe
 C:\Users\MSI Prestige\Desktop\Интерфейс\Compiler-Lab2\Desktop\6 сем\ТФЯиК\Compiler 1.0\Compiler 1.0\bin\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\bin\Debug\Compiler 1.0.exe.config
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\bin\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\bin\Debug\Compiler 1.0.pdb
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.AssemblyReference.cache
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\obj\Debug\Compiler_1._0.Form1.resources
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\obj\Debug\Compiler_1._0.Properties.Resources.resources
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.GenerateResource.cache
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\obj\Debug\Compiler 1.0.csproj.CoreCompileInputs.cache
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\obj\Debug\Compiler 1.0.exe
+C:\Users\MSI Prestige\Desktop\Compiler end\Compiler-labs\Compiler 1.0\obj\Debug\Compiler 1.0.pdb
