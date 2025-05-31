@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/f029cbab-fbef-409a-95c0-0ef4d1dea0ae)# Лабораторная работа 1
+![image](https://github.com/user-attachments/assets/a0899380-058e-443c-a382-4b6169df7b5c)![image](https://github.com/user-attachments/assets/f029cbab-fbef-409a-95c0-0ef4d1dea0ae)# Лабораторная работа 1
 
 **Тема:** Разработка пользовательского интерфейса (GUI) для языкового процессора  
 **Цель:** Разработать приложение — текстовый редактор.
@@ -94,11 +94,51 @@ _рис.1 Диаграмма сканера_
   `Func`
 
 - **P** (Правила продукции):
+ ```
+P {
+  <Func>        → <Fn> <Id> <LParen> <Params> <RParen> <ReturnType> <Body> <Semicolon>
+  <Params>      → ε | <Param> <ParamList>
+  <ParamList>   → <Comma> <Param> <ParamList> | ε
+  <Param>       → <Id> <Colon> <Type>
+  <ReturnType>  → <Arrow> <Type>
+  <Body>        → <LBrace> <ReturnStmt> <RBrace>
+  <ReturnStmt>  → <Return> <Expr> <Semicolon>
+  <Expr>        → <Term> <ExprPrime>
+  <ExprPrime>   → <Plus> <Term> <ExprPrime> | <Minus> <Term> <ExprPrime> | ε
+  <Term>        → <Factor> <TermPrime>
+  <TermPrime>   → <Star> <Factor> <TermPrime> | <Slash> <Factor> <TermPrime> | ε
+  <Factor>      → <Id> | <Number> | <LParen> <Expr> <RParen>
+}
+ ```
 
-<Func> → <Fn> <Id> <LParen> <Params> <RParen> <ReturnType> <Body> <Semicolon>
-<Params> → ε | <Param> <ParamList>
-<ParamList> → <Comma> <Param> <ParamList> | ε
+### Пояснение к грамматике:
 
-<Param> → <Id> <Colon> <Type> <ReturnType> → <Arrow> <Type> <Body> → <LBrace> <ReturnStmt> <RBrace> <ReturnStmt> → <Return> <Expr> <Semicolon> <Expr> → <Term> <ExprPrime> <ExprPrime> → <Plus> <Term> <ExprPrime> | <Minus> <Term> <ExprPrime> | ε <Term> → <Factor> <TermPrime> <TermPrime> → <Star> <Factor> <TermPrime> | <Slash> <Factor> <TermPrime> | ε <Factor> → <Id> | <Number> | <LParen> <Expr> <RParen> ``` ```
+| Нетерминал      | Значение |
+|------------------|----------|
+| `Func`           | Функция на языке Rust |
+| `Params`         | Параметры функции (в скобках) |
+| `ParamList`      | Список параметров через запятую |
+| `Param`          | Один параметр: идентификатор и тип |
+| `ReturnType`     | Тип возвращаемого значения (после `->`) |
+| `Body`           | Тело функции, заключённое в `{}` |
+| `ReturnStmt`     | Оператор `return` с выражением |
+| `Expr`           | Выражение с операцией сложения/вычитания |
+| `ExprPrime`      | Продолжение выражения: `+` или `-` и термин |
+| `Term`           | Термин: часть выражения для `*` или `/` |
+| `TermPrime`      | Продолжение терма: `*` или `/` и множитель |
+| `Factor`         | Число, идентификатор или выражение в скобках |
 
+### Граф правил:
+![image](https://github.com/user-attachments/assets/b61ced6a-9b47-4105-b3a1-78c5d5443518)
 
+### Пример работы парсера:
+![image](https://github.com/user-attachments/assets/5e2de7f7-9bb7-405e-b256-e5aa9c4292a8)
+
+![image](https://github.com/user-attachments/assets/0064726e-5656-441e-87d4-9d7de4c8b33d)
+
+## Лабораторная работа 4. Нейтрализация ошибок (метод Айронса)
+
+- **Цель работы:** *Реализовать алгоритм нейтрализации синтаксических ошибок и дополнить им программную реализацию парсера.*
+
+- **Задание:** *Реализовать алгоритм синтаксического анализа с нейтрализацией ошибок (метод Айронса).*
+![image](https://github.com/user-attachments/assets/13b0aee2-e7c9-4ffc-a520-8a9743646524)
