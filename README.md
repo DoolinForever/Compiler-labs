@@ -75,9 +75,30 @@ _рис.1 Диаграмма сканера_
 ![image](https://github.com/user-attachments/assets/a5fe1bde-18c3-4dc3-ac28-1b8e906e7fa0)
 
 
-
 # Лабораторная работа 3. Разработка синтаксического анализатора (парсера).
 
 **Тема:** Разработка лексического анализатора (сканера).
 
 - **Цель:** Изучить назначение синтаксического анализатора. Спроектировать алгоритм и выполнить программную реализацию парсера.
+## Грамматика функции на языке Rust
+
+**G[Rust_Function]** = (V<sub>t</sub>, V<sub>n</sub>, P, S)
+
+- **V<sub>t</sub>** (Терминальные символы):  
+  `{ fn, id, (, ), ,, :, ->, {, }, type, ;, return, number, +, -, *, /, ( ) }`
+
+- **V<sub>n</sub>** (Нетерминальные символы):  
+  `{ S, Func, Params, Param, ParamList, ReturnType, Body, ReturnStmt, Expr, Term, Factor }`
+
+- **S** (Стартовый символ):  
+  `Func`
+
+- **P** (Правила продукции):
+
+<Func> → <Fn> <Id> <LParen> <Params> <RParen> <ReturnType> <Body> <Semicolon>
+<Params> → ε | <Param> <ParamList>
+<ParamList> → <Comma> <Param> <ParamList> | ε
+
+<Param> → <Id> <Colon> <Type> <ReturnType> → <Arrow> <Type> <Body> → <LBrace> <ReturnStmt> <RBrace> <ReturnStmt> → <Return> <Expr> <Semicolon> <Expr> → <Term> <ExprPrime> <ExprPrime> → <Plus> <Term> <ExprPrime> | <Minus> <Term> <ExprPrime> | ε <Term> → <Factor> <TermPrime> <TermPrime> → <Star> <Factor> <TermPrime> | <Slash> <Factor> <TermPrime> | ε <Factor> → <Id> | <Number> | <LParen> <Expr> <RParen> ``` ```
+
+
