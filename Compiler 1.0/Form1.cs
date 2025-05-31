@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
-using Compiler_1._0;
+
 
 
 namespace Compiler_1._0
@@ -61,11 +61,54 @@ namespace Compiler_1._0
         private void toolStripButton2_Click(object sender, EventArgs e)
         {
             string source = richTextBox1.Text;
-            bool hasErrors;
-            string result = AnalyzerHelper.AnalyzeCode(source, out hasErrors);
+            richTextBox2.Clear();
+            var output = new StringBuilder();
 
-            richTextBox2.ForeColor = hasErrors ? Color.Red : Color.Green;
-            richTextBox2.Text = result;
+            var lexer = new Lexer(source);
+            var (tokens, lexErrors) = lexer.TokenizeAll();
+
+            int totalErrors = lexErrors.Count;
+
+            // Лексика
+            if (lexErrors.Any())
+            {
+                output.AppendLine("Лексические ошибки:");
+                foreach (var err in lexErrors)
+                {
+                    output.AppendLine($"  Строка {err.Line}, столбец {err.Column}, лексема: '{err.Lexeme}' — {err.Message}");
+                }
+                output.AppendLine();
+            }
+
+            // ✅ Всегда запускаем синтаксис
+            var parser = new Parser(tokens);
+            parser.ParseFunctionWithRecovery();
+
+            if (parser.SyntaxErrors.Any())
+            {
+                output.AppendLine("Синтаксические ошибки:");
+                foreach (var err in parser.SyntaxErrors)
+                {
+                    output.AppendLine($"  Строка {err.Line}, столбец {err.Column}, лексема: '{err.Lexeme}' — {err.Message}");
+                }
+                output.AppendLine();
+            }
+
+            totalErrors += parser.SyntaxErrors.Count;
+
+            // Итог
+            if (totalErrors == 0)
+            {
+                output.AppendLine("Функция корректна.");
+                richTextBox2.ForeColor = Color.Green;
+            }
+            else
+            {
+                output.AppendLine($"Общее количество ошибок: {totalErrors}");
+                richTextBox2.ForeColor = Color.Red;
+            }
+
+            richTextBox2.Text = output.ToString();
         }
 
 
@@ -424,19 +467,6 @@ namespace Compiler_1._0
                 MessageBox.Show("Файл code.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void toolStripButton1_Click(object sender, EventArgs e)
-        {
-            string source = richTextBox1.Text;
-            string fixedCode = AnalyzerHelper.FixCode(source);
 
-            richTextBox1.Text = fixedCode;
-            MessageBox.Show("Ошибки устранены. Выполнен повторный анализ.", "Исправление завершено", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-            // Повторный запуск анализа
-            toolStripButton2_Click(sender, e);
-        }
-
-
-            
     }
 }
