@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/a0899380-058e-443c-a382-4b6169df7b5c)![image](https://github.com/user-attachments/assets/f029cbab-fbef-409a-95c0-0ef4d1dea0ae)# Лабораторная работа 1
+# Лабораторная работа 1
 
 **Тема:** Разработка пользовательского интерфейса (GUI) для языкового процессора  
 **Цель:** Разработать приложение — текстовый редактор.
