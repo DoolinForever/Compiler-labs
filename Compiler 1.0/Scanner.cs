@@ -5,15 +5,13 @@ using System.Windows.Forms;
 
 namespace Compiler_1._0
 {
-    
-
     enum TokenType
     {
-        Fn, Return,
+        Fn, Return, If, Else,
         Identifier, TypeName, Number,
         Comma, Colon, Semicolon,
         Arrow, LParen, RParen, LBrace, RBrace,
-        Plus, Minus, Star, Slash,
+        Plus, Minus, Star, Slash, Equal,
         EndOfFile
     }
 
@@ -68,7 +66,6 @@ namespace Compiler_1._0
         private readonly string _text;
         private int _pos = 0, _line = 1, _column = 1;
 
-        // Разрешённые типы переменных
         private static readonly HashSet<string> ReservedTypes = new HashSet<string>
         {
             "i8", "i16", "i32", "i64", "i128",
@@ -103,7 +100,6 @@ namespace Compiler_1._0
                 catch (LexicalException ex)
                 {
                     errors.Add(ex);
-
                     Advance();
                 }
             }
@@ -111,35 +107,27 @@ namespace Compiler_1._0
             return (tokens, errors);
         }
 
-
-
         public Token NextToken()
         {
-            // Пропускаем пробелы
             while (char.IsWhiteSpace(Current))
                 Advance();
 
             int startLine = _line, startCol = _column;
 
-            // Конец файла
             if (Current == '\0')
                 return new Token(TokenType.EndOfFile, string.Empty, startLine, startCol);
 
-            // Специальная обработка типа &str
             if (Current == '&')
             {
                 int remaining = _text.Length - _pos;
                 if (remaining >= 4 && _text.Substring(_pos, 4) == "&str")
                 {
-                    // Съедаем '&str'
-                    for (int i = 0; i < 4; i++)
-                        Advance();
+                    for (int i = 0; i < 4; i++) Advance();
                     return new Token(TokenType.TypeName, "&str", startLine, startCol);
                 }
                 throw new LexicalException("Unexpected character '&'", startLine, startCol, "&");
             }
 
-            // Однобуквенные символы и операторы
             switch (Current)
             {
                 case '(': Advance(); return new Token(TokenType.LParen, "(", startLine, startCol);
@@ -152,46 +140,33 @@ namespace Compiler_1._0
                 case '+': Advance(); return new Token(TokenType.Plus, "+", startLine, startCol);
                 case '-':
                     Advance();
-                    if (Current == '>')
-                    {
-                        Advance();
-                        return new Token(TokenType.Arrow, "->", startLine, startCol);
-                    }
+                    if (Current == '>') { Advance(); return new Token(TokenType.Arrow, "->", startLine, startCol); }
                     return new Token(TokenType.Minus, "-", startLine, startCol);
-                case '>':  
+                case '>':
                     throw new LexicalException("Ожидался '->', найден одиночный '>'", _line, _column, ">");
-
                 case '*': Advance(); return new Token(TokenType.Star, "*", startLine, startCol);
                 case '/': Advance(); return new Token(TokenType.Slash, "/", startLine, startCol);
+                case '=': Advance(); return new Token(TokenType.Equal, "=", startLine, startCol);
+
             }
 
-            // Идентификаторы, ключевые слова и типы
             if (char.IsLetter(Current) || Current == '_')
             {
                 var sb = new StringBuilder();
                 while (char.IsLetterOrDigit(Current) || Current == '_')
                 {
-                    if (Current > 127) // non-ASCII = ошибка
+                    if (Current > 127)
                         throw new LexicalException("Forbidden character (non-ASCII)", _line, _column, Current.ToString());
-
                     sb.Append(Current);
                     Advance();
                 }
-
                 var lex = sb.ToString();
-
-                if (lex == "fn")
-                    return new Token(TokenType.Fn, lex, startLine, startCol);
-                if (lex == "return")
-                    return new Token(TokenType.Return, lex, startLine, startCol);
-                if (ReservedTypes.Contains(lex))
-                    return new Token(TokenType.TypeName, lex, startLine, startCol);
-
+                if (lex == "fn") return new Token(TokenType.Fn, lex, startLine, startCol);
+                if (lex == "return") return new Token(TokenType.Return, lex, startLine, startCol);
+                if (ReservedTypes.Contains(lex)) return new Token(TokenType.TypeName, lex, startLine, startCol);
                 return new Token(TokenType.Identifier, lex, startLine, startCol);
             }
 
-
-            // Числа
             if (char.IsDigit(Current))
             {
                 var sb = new StringBuilder();
@@ -203,7 +178,6 @@ namespace Compiler_1._0
                 return new Token(TokenType.Number, sb.ToString(), startLine, startCol);
             }
 
-            // Нераспознанный символ
             char bad = Current;
             Advance();
             throw new LexicalException($"Unexpected character '{bad}'", startLine, startCol, bad.ToString());
@@ -212,136 +186,106 @@ namespace Compiler_1._0
 
     class Parser
     {
-        private readonly List<Token> _tokens;
-        private int _index = 0;
-        public int Position
-        {
-            get { return _index; }
-        }
         public Parser(List<Token> tokens)
         {
             _tokens = tokens;
         }
 
+        private readonly List<Token> _tokens;
+        private int _index = 0;
         public List<SyntaxException> SyntaxErrors { get; } = new List<SyntaxException>();
 
-
-        // Корректное определение свойства Current
         private Token Current
         {
             get
             {
                 if (_index < _tokens.Count)
                     return _tokens[_index];
-                
-                return _tokens[_tokens.Count - 1];
+                return _tokens[_tokens.Count - 1]; // эквивалент ^1
             }
         }
 
         private void Eat(TokenType type)
         {
-            if (Current.Type == type)
-            {
-                _index++;
-                return;
-            }
-
-            var ex = new SyntaxException(
-                $"Ожидался токен '{type}', найден '{Current.Lexeme}'",
-                Current.Line, Current.Column, Current.Lexeme);
-            SyntaxErrors.Add(ex);
-
-            Recover(); // вместо _index++;
+            if (Current.Type == type) { _index++; return; }
+            SyntaxErrors.Add(new SyntaxException($"Ожидался токен '{type}', найден '{Current.Lexeme}'", Current.Line, Current.Column, Current.Lexeme));
+            Recover();
         }
 
         private void Recover()
         {
-            // Пропускаем токены до конца инструкции или блока
-            while (Current.Type != TokenType.Semicolon &&
-                   Current.Type != TokenType.RBrace &&
-                   Current.Type != TokenType.EndOfFile)
-            {
+            while (Current.Type != TokenType.Semicolon && Current.Type != TokenType.RBrace && Current.Type != TokenType.EndOfFile)
                 _index++;
-            }
-
-            if (Current.Type != TokenType.EndOfFile)
-                _index++; // пропускаем и ; или }
+            if (Current.Type != TokenType.EndOfFile) _index++;
         }
 
+        private bool TryEat(TokenType type)
+        {
+            if (Current.Type == type) { _index++; return true; }
+            SyntaxErrors.Add(new SyntaxException($"Ожидался токен '{type}', найден '{Current.Lexeme}'", Current.Line, Current.Column, Current.Lexeme));
+            _index++;
+            return false;
+        }
 
         public void ParseFunctionWithRecovery()
         {
             TryEat(TokenType.Fn);
             TryEat(TokenType.Identifier);
             TryEat(TokenType.LParen);
-
-            // параметры
-            if (Current.Type == TokenType.Identifier)
-            {
-                TryEat(TokenType.Identifier);
-                TryEat(TokenType.Colon);
-                TryEat(TokenType.TypeName);
-
-                while (Current.Type == TokenType.Comma)
-                {
-                    _index++; // пропускаем запятую
-                    TryEat(TokenType.Identifier);
-                    TryEat(TokenType.Colon);
-                    TryEat(TokenType.TypeName);
-                }
-            }
-
+            ParseParamList();
             TryEat(TokenType.RParen);
             TryEat(TokenType.Arrow);
             TryEat(TokenType.TypeName);
             TryEat(TokenType.LBrace);
-            TryEat(TokenType.Return);
 
-            ParseExpression();
+            ParseStatement();
 
-            TryEat(TokenType.Semicolon);
             TryEat(TokenType.RBrace);
             TryEat(TokenType.EndOfFile);
         }
 
-
-
-        private bool TryEat(TokenType type)
+        private void ParseStatement()
         {
-            if (Current.Type == type)
+            if (Current.Type == TokenType.Identifier)
             {
-                _index++;
-                return true;
+                // Присваивание: x = 3 + 4;
+                _index++; // пропускаем имя переменной
+                if (Current.Lexeme == "=")
+                {
+                    _index++; // пропускаем '='
+                    ParseExpression(); // выражение после =
+                    TryEat(TokenType.Semicolon); // завершение ;
+                }
+                else
+                {
+                    SyntaxErrors.Add(new SyntaxException(
+                        $"Ожидался символ '=' после идентификатора, найден '{Current.Lexeme}'",
+                        Current.Line, Current.Column, Current.Lexeme));
+                    Recover();
+                }
             }
-
-            // Если токен был вставлен заглушкой
-            if (string.IsNullOrEmpty(Current.Lexeme))
+            else if (Current.Type == TokenType.Return)
             {
-                var err = new SyntaxException(
-                    $"Ожидался токен '{type}', но в позиции ошибка лексики (пустая лексема)",
-                    Current.Line, Current.Column, "<пусто>");
-                SyntaxErrors.Add(err);
-
-                _index++; // всё равно двигаемся вперёд
-                return false;
+                TryEat(TokenType.Return);
+                ParseExpression();
+                TryEat(TokenType.Semicolon);
             }
-
-            // Специальный случай: '-' вместо '->'
-            if (type == TokenType.Arrow && Current.Type == TokenType.Minus)
+            else
             {
                 SyntaxErrors.Add(new SyntaxException(
-                    $"Ожидался '->', найден одиночный '-' (возможно, забыта >)",
+                    $"Ожидался идентификатор или return, найден '{Current.Lexeme}'",
                     Current.Line, Current.Column, Current.Lexeme));
-                _index++;
-                return false;
+                Recover();
             }
+        }
 
-            // Обычная синтаксическая ошибка
-            SyntaxErrors.Add(new SyntaxException(
-                $"Ожидался токен '{type}', найден '{Current.Lexeme}'",
-                Current.Line, Current.Column, Current.Lexeme));
-            _index++;
-            return false;
+
+        private void ParseAssignStatement()
+        {
+            TryEat(TokenType.Identifier);
+            TryEat(TokenType.Equal);
+            ParseExpression();
+            TryEat(TokenType.Semicolon);
         }
 
         private void ParseParamList()
@@ -387,9 +331,7 @@ namespace Compiler_1._0
         private void ParseFactor()
         {
             if (Current.Type == TokenType.Number || Current.Type == TokenType.Identifier)
-            {
                 _index++;
-            }
             else if (Current.Type == TokenType.LParen)
             {
                 TryEat(TokenType.LParen);
@@ -398,12 +340,38 @@ namespace Compiler_1._0
             }
             else
             {
-                var ex = new SyntaxException(
-                    $"Недопустимый токен '{Current.Lexeme}' в выражении",
-                    Current.Line, Current.Column, Current.Lexeme);
-                SyntaxErrors.Add(ex);
+                SyntaxErrors.Add(new SyntaxException($"Недопустимый токен '{Current.Lexeme}' в выражении", Current.Line, Current.Column, Current.Lexeme));
                 _index++;
             }
+        }
+        private void ParseStatementList()
+        {
+            while (Current.Type == TokenType.Identifier || Current.Type == TokenType.Return)
+            {
+                if (Current.Type == TokenType.Identifier)
+                {
+                    ParseAssignment();
+                }
+                else if (Current.Type == TokenType.Return)
+                {
+                    ParseReturn();
+                }
+            }
+        }
+
+        private void ParseAssignment()
+        {
+            Eat(TokenType.Identifier);
+            Eat(TokenType.Equal); // НУЖНО ДОБАВИТЬ В enum TokenType: Equal
+            ParseExpression();
+            Eat(TokenType.Semicolon);
+        }
+
+        private void ParseReturn()
+        {
+            Eat(TokenType.Return);
+            ParseExpression();
+            Eat(TokenType.Semicolon);
         }
 
 

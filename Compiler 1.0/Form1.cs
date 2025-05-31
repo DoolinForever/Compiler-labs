@@ -10,23 +10,42 @@ using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
 
-
-
 namespace Compiler_1._0
 {
-
     public partial class Form1 : Form
     {
-
-
-
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            UpdateLineNumbers();
-            richTextBox2.Clear();
+            
         }
 
-        
+        private void ShowHelp()
+        {
+            string helpText =
+        @"СПРАВКА
+
+Файл
+• Создать — очищает текстовое поле для нового файла.
+• Открыть — загружает текстовый файл в редактор.
+• Сохранить — сохраняет текущий файл. Если он ещё не был сохранён, вызывает 'Сохранить как'.
+• Сохранить как — позволяет выбрать путь и имя файла для сохранения.
+• Выход — завершает работу программы, с предупреждением о несохранённых данных.
+
+Правка
+• Отменить — отменяет последнее действие.
+• Повторить — возвращает последнее отменённое действие.
+• Вырезать — удаляет выделенный текст и копирует его в буфер обмена.
+• Копировать — копирует выделенный текст.
+• Вставить — вставляет текст из буфера в позицию курсора.
+• Удалить — удаляет выделенный текст без копирования.
+• Выделить всё — выделяет весь текст в редакторе.
+
+Справка
+• Вызов справки — показывает это окно.
+• О программе — информация об авторе и версии.";
+
+            MessageBox.Show(helpText, "Справка", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
         private void ShowAboutInfo()
         {
             string info =
@@ -49,69 +68,12 @@ namespace Compiler_1._0
         public Form1()
         {
             InitializeComponent();
-            this.Text = "Compiler";
-
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
         }
-
-        private void toolStripButton2_Click(object sender, EventArgs e)
-        {
-            string source = richTextBox1.Text;
-            richTextBox2.Clear();
-            var output = new StringBuilder();
-
-            var lexer = new Lexer(source);
-            var (tokens, lexErrors) = lexer.TokenizeAll();
-
-            int totalErrors = lexErrors.Count;
-
-            // Лексика
-            if (lexErrors.Any())
-            {
-                output.AppendLine("Лексические ошибки:");
-                foreach (var err in lexErrors)
-                {
-                    output.AppendLine($"  Строка {err.Line}, столбец {err.Column}, лексема: '{err.Lexeme}' — {err.Message}");
-                }
-                output.AppendLine();
-            }
-
-            // ✅ Всегда запускаем синтаксис
-            var parser = new Parser(tokens);
-            parser.ParseFunctionWithRecovery();
-
-            if (parser.SyntaxErrors.Any())
-            {
-                output.AppendLine("Синтаксические ошибки:");
-                foreach (var err in parser.SyntaxErrors)
-                {
-                    output.AppendLine($"  Строка {err.Line}, столбец {err.Column}, лексема: '{err.Lexeme}' — {err.Message}");
-                }
-                output.AppendLine();
-            }
-
-            totalErrors += parser.SyntaxErrors.Count;
-
-            // Итог
-            if (totalErrors == 0)
-            {
-                output.AppendLine("Функция корректна.");
-                richTextBox2.ForeColor = Color.Green;
-            }
-            else
-            {
-                output.AppendLine($"Общее количество ошибок: {totalErrors}");
-                richTextBox2.ForeColor = Color.Red;
-            }
-
-            richTextBox2.Text = output.ToString();
-        }
-
-
 
         private void Созранить_Click(object sender, EventArgs e)
         {
@@ -140,8 +102,7 @@ namespace Compiler_1._0
 
         private void richTextBox2_TextChanged(object sender, EventArgs e)
         {
-            richTextBox2.SelectionStart = 0;
-            richTextBox2.ScrollToCaret();
+
         }
 
         private void Create_Click(object sender, EventArgs e)
@@ -204,7 +165,6 @@ namespace Compiler_1._0
                     MessageBox.Show("Ошибка при открытии файла: " + ex.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            
         }
 
         private void сохрнаитьКакToolStripMenuItem_Click(object sender, EventArgs e)
@@ -341,21 +301,12 @@ namespace Compiler_1._0
 
         private void вызовСправкиToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string helpFile = Path.Combine(Application.StartupPath, "help.html");
-
-            if (File.Exists(helpFile))
-            {
-                System.Diagnostics.Process.Start(helpFile);
-            }
-            else
-            {
-                MessageBox.Show("Файл справки не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            ShowHelp();
         }
 
         private void Reference_Click(object sender, EventArgs e)
         {
-            вызовСправкиToolStripMenuItem_Click(sender, e);
+            ShowHelp();
         }
 
         private void оПрограммеToolStripMenuItem_Click(object sender, EventArgs e)
@@ -363,110 +314,19 @@ namespace Compiler_1._0
             ShowAboutInfo();
         }
 
-        private void пускToolStripMenuItem_Click(object sender, EventArgs e)
+        private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            toolStripButton2_Click(sender, e);
+            Class1.НайтиГоды(richTextBox1);
         }
 
-        private void richTextBox1_VScroll(object sender, EventArgs e)
+        private void toolStripButton2_Click_1(object sender, EventArgs e)
         {
-            SyncScroll();
+            Class1.НайтиДолготы(richTextBox1);
         }
 
-        private void UpdateLineNumbers()
+        private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            int firstLine = richTextBox1.GetLineFromCharIndex(richTextBox1.GetCharIndexFromPosition(new Point(0, 0)));
-            int lastLine = richTextBox1.GetLineFromCharIndex(richTextBox1.GetCharIndexFromPosition(new Point(0, richTextBox1.ClientSize.Height)));
-
-            var lineNumbers = new StringBuilder();
-            for (int i = firstLine + 1; i <= lastLine + 1; i++)
-            {
-                lineNumbers.AppendLine(i.ToString());
-            }
-
-            lineNumbersBox.Text = lineNumbers.ToString();
+            Class1.НайтиSSN(richTextBox1);
         }
-
-        private void SyncScroll()
-        {
-            int d = richTextBox1.GetPositionFromCharIndex(0).Y - lineNumbersBox.GetPositionFromCharIndex(0).Y;
-            lineNumbersBox.Location = new Point(lineNumbersBox.Location.X, d);
-        }
-
-        private void постановкаЗадачиToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string helpFile = Path.Combine(Application.StartupPath, "task.html");
-
-            if (File.Exists(helpFile))
-            {
-                System.Diagnostics.Process.Start(helpFile);
-            }
-            else
-            {
-                MessageBox.Show("Файл task.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void грамматикаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string path = Path.Combine(Application.StartupPath, "grammar.html");
-
-            if (File.Exists(path))
-                System.Diagnostics.Process.Start(path);
-            else
-                MessageBox.Show("Файл grammar.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void классификацияГрамматикиToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string path = Path.Combine(Application.StartupPath, "classification.html");
-
-            if (File.Exists(path))
-                System.Diagnostics.Process.Start(path);
-            else
-                MessageBox.Show("Файл classification.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void методАнализаToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string path = Path.Combine(Application.StartupPath, "analysis.html");
-
-            if (File.Exists(path))
-                System.Diagnostics.Process.Start(path);
-            else
-                MessageBox.Show("Файл analysis.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void тестовыйПримерToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string path = Path.Combine(Application.StartupPath, "test.html");
-
-            if (File.Exists(path))
-                System.Diagnostics.Process.Start(path);
-            else
-                MessageBox.Show("Файл test.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void списокЛитературыToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string path = Path.Combine(Application.StartupPath, "literature.html");
-
-            if (File.Exists(path))
-                System.Diagnostics.Process.Start(path);
-            else
-                MessageBox.Show("Файл literature.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-        private void исходныйКодПрограммыToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            string path = Path.Combine(Application.StartupPath, "code.html");
-
-            if (File.Exists(path))
-                System.Diagnostics.Process.Start(path);
-            else
-                MessageBox.Show("Файл code.html не найден.", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-        }
-
-
     }
 }
