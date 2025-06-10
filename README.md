@@ -1,4 +1,4 @@
-# Лабораторная работа 1
+![Screenshot_8](https://github.com/user-attachments/assets/5e6256fb-fee1-4fdb-9076-816a41baa559)# Лабораторная работа 1
 
 **Тема:** Разработка пользовательского интерфейса (GUI) для языкового процессора  
 **Цель:** Разработать приложение — текстовый редактор.
@@ -179,6 +179,27 @@ XXX-XX-XXXX, где каждый X может быть любой цифрой [
 корректных значений).
 **Результат работы:**
 ![3 задание](https://github.com/user-attachments/assets/a7d2327d-45fb-4061-8e77-105ed01a755d)
+
+# Лабораторная работа 7
+## Преобразование и анализ кода с использованием Clang и LLVM.
+**Цель работы:** Познакомиться с инструментами Clang и LLVM, научиться собирать AST и IR-промежуточное представление кода на C/C++, а также извлекать базовую информацию о программе.
+
+**Задание:** 
+1. Установить Clang и LLVM;
+![Screenshot_1](https://github.com/user-attachments/assets/ceb34e4a-207b-4f9b-899a-4de06cd972e3)
+2. Скомпилировать простой C-файл с использованием clang и получить его: абстрактное синтаксическое дерево (AST), промежуточное представление LLVM IR;
+![Screenshot_3](https://github.com/user-attachments/assets/83ebad3e-1d5b-464c-bf49-11116288e4dc)
+![Screenshot_4](https://github.com/user-attachments/assets/137e8222-e63b-4f51-b806-3b9501a6a136)
+![Screenshot_5](https://github.com/user-attachments/assets/3d18cd45-f54b-43af-8dd8-15e1500ffede)
+![Screenshot_6](https://github.com/user-attachments/assets/5e1722d1-9bb9-48ef-b03e-bcfbf7823fde)
+![Screenshot_7](https://github.com/user-attachments/assets/0fe31045-ee2b-4a56-b568-df9c2ffa9efd)
+![Screenshot_8](https://github.com/user-attachments/assets/b97ada51-ff4e-4783-9109-e437917be544)
+![Screenshot_9](https://github.com/user-attachments/assets/203a543d-6080-434d-953c-07bf8f8b4ac2)
+![Screenshot_10](https://github.com/user-attachments/assets/003ecaa7-1b38-4fda-bfaa-4dcd06d4fc55)
+![Screenshot_11](https://github.com/user-attachments/assets/6039c76e-cf02-44df-bdfc-61b4d72962e2)
+![Screenshot_12](https://github.com/user-attachments/assets/3cba1cfe-0fed-4bd8-9619-b9d74bac7643)
+![Screenshot_13](https://github.com/user-attachments/assets/e1f9514d-2b9e-4ca0-b8ed-821d119f4608)
+
 
 # Лабораторная работа 8
 ## Реализация метода рекурсивного спуска для синтаксического анализа
