@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
+using static Class1;
 
 namespace Compiler_1._0
 {
@@ -316,17 +317,40 @@ namespace Compiler_1._0
 
         private void toolStripButton1_Click(object sender, EventArgs e)
         {
-            Class1.НайтиГоды(richTextBox1);
+            
         }
 
         private void toolStripButton2_Click_1(object sender, EventArgs e)
         {
-            Class1.НайтиДолготы(richTextBox1);
+           
         }
 
         private void toolStripButton3_Click(object sender, EventArgs e)
         {
-            Class1.НайтиSSN(richTextBox1);
+            string input = richTextBox1.Text;
+
+            StringBuilder sb = new StringBuilder();
+
+            try
+            {
+                Lexer lexer = new Lexer(input);
+                lexer.Tokenize();
+
+                sb.AppendLine("Лексемы:");
+                foreach (var token in lexer.Tokens)
+                    sb.AppendLine(token.ToString());
+
+                Parser parser = new Parser(lexer.Tokens);
+                sb.AppendLine("\nАнализ:\n");
+                sb.AppendLine(parser.Parse());
+            }
+            catch (Exception ex)
+            {
+                sb.AppendLine($"\nОШИБКА: {ex.Message}");
+            }
+
+            richTextBox2.Text = sb.ToString();
         }
+
     }
 }

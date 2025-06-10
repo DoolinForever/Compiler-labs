@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -6,154 +7,207 @@ using System.Windows.Forms;
 
 class Class1
 {
-    public static void НайтиSSN(RichTextBox richTextBox)
+    public enum TokenType
     {
-        string text = richTextBox.Text;
-        string pattern = @"\b\d{3}-\d{2}-\d{4}\b";
+        Identifier,
+        Implication,   // >
+        Or,            // +
+        And,           // *
+        Not,           // !
+        LParen,        // (
+        RParen,        // )
+        EOF,
+        Unknown
+    }
+    public class Token
+    {
+        public TokenType Type { get; }
+        public string Value { get; }
+        public int Position { get; }
 
-        Regex regex = new Regex(pattern);
-        MatchCollection matches = regex.Matches(text);
-
-        if (matches.Count == 0)
+        public Token(TokenType type, string value, int position)
         {
-            MessageBox.Show("Номера SSN не найдены.", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
+            Type = type;
+            Value = value;
+            Position = position;
         }
 
-        // Сброс подсветки
-        richTextBox.SelectAll();
-        richTextBox.SelectionBackColor = richTextBox.BackColor;
-        richTextBox.DeselectAll();
-
-        StringBuilder result = new StringBuilder("Найденные SSN:\n\n");
-
-        string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-        int globalIndex = 0;
-
-        for (int i = 0; i < lines.Length; i++)
+        public override string ToString()
         {
-            string line = lines[i];
-            MatchCollection lineMatches = regex.Matches(line);
+            return $"[{Type}] \"{Value}\" (pos {Position})";
+        }
+    }
+    public class Lexer
+    {
+        private string input;
+        private int position;
+        public List<Token> Tokens { get; } = new List<Token>();
 
-            foreach (Match match in lineMatches)
+        public Lexer(string input)
+        {
+            this.input = input.Replace(" ", "");
+            this.position = 0;
+        }
+
+        public void Tokenize()
+        {
+            while (position < input.Length)
             {
-                int localIndex = match.Index;
+                char ch = input[position];
+                int startPos = position;
 
-                result.AppendLine($"Номер строки: {i + 1}");
-                result.AppendLine($"Строка: {line}");
-                result.AppendLine($"Позиция в строке: {localIndex}");
-                result.AppendLine();
+                if (char.IsLetter(ch))
+                {
+                    if (ch >= 'А' && ch <= 'я') // Проверка на русские символы
+                    {
+                        throw new Exception($"Ошибка: недопустимый символ '{ch}' (русская буква) на позиции {startPos}");
+                    }
 
-                // Подсветка найденного SSN
-                richTextBox.Select(globalIndex + localIndex, match.Length);
-                richTextBox.SelectionBackColor = Color.Yellow;
+                    string identifier = ReadWhile(char.IsLetterOrDigit);
+                    Tokens.Add(new Token(TokenType.Identifier, identifier, startPos));
+                }
+                else
+                {
+                    switch (ch)
+                    {
+                        case '>': Tokens.Add(new Token(TokenType.Implication, ">", position++)); break;
+                        case '+': Tokens.Add(new Token(TokenType.Or, "+", position++)); break;
+                        case '*': Tokens.Add(new Token(TokenType.And, "*", position++)); break;
+                        case '!': Tokens.Add(new Token(TokenType.Not, "!", position++)); break;
+                        case '(': Tokens.Add(new Token(TokenType.LParen, "(", position++)); break;
+                        case ')': Tokens.Add(new Token(TokenType.RParen, ")", position++)); break;
+                        default:
+                            throw new Exception($"Ошибка: недопустимый символ '{ch}' на позиции {startPos}");
+                    }
+                }
             }
 
-            globalIndex += line.Length + 1;
+            Tokens.Add(new Token(TokenType.EOF, "", position));
         }
 
-        richTextBox.DeselectAll();
-        MessageBox.Show(result.ToString(), "Результат поиска", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+        private string ReadWhile(Func<char, bool> condition)
+        {
+            int start = position;
+            while (position < input.Length && condition(input[position]))
+                position++;
+            return input.Substring(start, position - start);
+        }
     }
 
-
-    public static void НайтиГоды(RichTextBox richTextBox)
+    public class Parser
     {
-        string text = richTextBox.Text;
-        string pattern = @"\b(1998|1999|200[0-4])\b";
+        private List<Token> tokens;
+        private int position;
+        private List<string> trace = new List<string>();  
+        private string lastNonTerminal = "";
 
-        Regex regex = new Regex(pattern);
-        MatchCollection matches = regex.Matches(text);
-
-        if (matches.Count == 0)
+        public Parser(List<Token> tokens)
         {
-            MessageBox.Show("Годы между 1998 и 2004 не найдены.", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
+            this.tokens = tokens;
+            this.position = 0;
         }
 
-        // Сброс подсветки
-        richTextBox.SelectAll();
-        richTextBox.SelectionBackColor = richTextBox.BackColor;
-        richTextBox.DeselectAll();
+        private Token Current => position < tokens.Count ? tokens[position] : null;
+        private void Advance() => position++;
 
-        StringBuilder result = new StringBuilder("Найденные годы:\n\n");
-
-        string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-        int globalIndex = 0;
-
-        for (int i = 0; i < lines.Length; i++)
+        public string Parse()
         {
-            string line = lines[i];
-            MatchCollection lineMatches = regex.Matches(line);
-
-            foreach (Match match in lineMatches)
+            try
             {
-                int localIndex = match.Index;
+                E();
+                if (Current.Type != TokenType.EOF)
+                    return Error($"Неожиданная лексема \"{Current.Value}\"", Current.Position);
 
-                result.AppendLine($"Номер строки: {i + 1}");
-                result.AppendLine($"Строка: {line}");
-                result.AppendLine($"Позиция в строке: {localIndex}");
-                result.AppendLine();
-
-                // Подсветка найденного года
-                richTextBox.Select(globalIndex + localIndex, match.Length);
-                richTextBox.SelectionBackColor = Color.LightGreen;
+                return string.Join("\n", trace) + $"\n\nАнализ завершён. Итоговый нетерминал: {lastNonTerminal}";
             }
-
-            globalIndex += line.Length + 1; // учёт символа переноса строки
-        }
-
-        richTextBox.DeselectAll();
-        MessageBox.Show(result.ToString(), "Результат поиска", MessageBoxButtons.OK, MessageBoxIcon.Information);
-    }
-
-    public static void НайтиДолготы(RichTextBox richTextBox)
-    {
-        string text = richTextBox.Text;
-        string pattern = @"\b-?(180(\.0+)?|1[0-7]\d(\.\d+)?|[1-9]?\d(\.\d+)?)\b";
-
-        Regex regex = new Regex(pattern);
-        MatchCollection matches = regex.Matches(text);
-
-        if (matches.Count == 0)
-        {
-            MessageBox.Show("Долготы не найдены.", "Результат", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        // Сброс подсветки
-        richTextBox.SelectAll();
-        richTextBox.SelectionBackColor = richTextBox.BackColor;
-        richTextBox.DeselectAll();
-
-        StringBuilder result = new StringBuilder("Найденные долготы:\n\n");
-
-        string[] lines = text.Split(new[] { "\r\n", "\n" }, StringSplitOptions.None);
-        int globalIndex = 0;
-
-        for (int i = 0; i < lines.Length; i++)
-        {
-            string line = lines[i];
-            MatchCollection lineMatches = regex.Matches(line);
-
-            foreach (Match match in lineMatches)
+            catch (Exception ex)
             {
-                int localIndex = match.Index;
-
-                result.AppendLine($"Номер строки: {i + 1}");
-                result.AppendLine($"Строка: {line}");
-                result.AppendLine($"Позиция в строке: {localIndex}");
-                result.AppendLine();
-
-                // Подсветка найденной долготы
-                richTextBox.Select(globalIndex + localIndex, match.Length);
-                richTextBox.SelectionBackColor = Color.LightSkyBlue;
+                return string.Join("\n", trace) + $"\n\n{ex.Message}";
             }
-
-            globalIndex += line.Length + 1;
         }
 
-        richTextBox.DeselectAll();
-        MessageBox.Show(result.ToString(), "Результат поиска", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        private string Error(string message, int pos)
+        {
+            throw new Exception($"Ошибка: {message} на позиции {pos}");
+        }
+
+        private void E()
+        {
+            trace.Add("E");
+            lastNonTerminal = "E";
+            E1();
+            while (Current.Type == TokenType.Implication)
+            {
+                Advance();
+                E1();
+            }
+        }
+
+        private void E1()
+        {
+            trace.Add("E1");
+            lastNonTerminal = "E1";
+            E2();
+            while (Current.Type == TokenType.Or)
+            {
+                Advance();
+                E2();
+            }
+        }
+
+        private void E2()
+        {
+            trace.Add("E2");
+            lastNonTerminal = "E2";
+            E3();
+            while (Current.Type == TokenType.And)
+            {
+                Advance();
+                E3();
+            }
+        }
+
+        private void E3()
+        {
+            trace.Add("E3");
+            lastNonTerminal = "E3";
+            if (Current.Type == TokenType.Not)
+            {
+                Advance();
+                E4();
+            }
+            else
+            {
+                E4();
+            }
+        }
+
+        private void E4()
+        {
+            trace.Add("E4");
+            lastNonTerminal = "E4";
+            if (Current.Type == TokenType.LParen)
+            {
+                Advance();
+                E();
+                if (Current.Type == TokenType.RParen)
+                {
+                    Advance();
+                }
+                else
+                {
+                    throw new Exception(Error("Ожидалась \")\"", Current.Position));
+                }
+            }
+            else if (Current.Type == TokenType.Identifier)
+            {
+                Advance();
+            }
+            else
+            {
+                throw new Exception(Error("Ожидался идентификатор или \"(\"", Current.Position));
+            }
+        }
     }
 }
